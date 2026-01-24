@@ -12,6 +12,9 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
+   base: process.env.NODE_ENV === 'production' 
+    ? '/finance-dashboard/' 
+    : '/',    
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
