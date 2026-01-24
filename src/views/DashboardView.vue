@@ -79,7 +79,7 @@ watch(allTransaction, (newData) => {
 const chartData = computed(() => {
   // Агрегация данных по категориям
   const categoryTotals: Record<string, number> = {
-    'Еда': 0,
+    'Едаа': 0,
     'Транспорт': 0,
     'Прочее': 0
   };
