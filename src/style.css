@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+
+.neumorphism-convex{
+    background: linear-gradient(145deg, #caced4, #f0f5fd);
+    box-shadow:  5px 5px 12px #b8bcc2,
+             -5px -5px 12px #ffffff;
+}      
+.neumorphism-concave{
+    box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.05),
+    inset -5px -5px 10px #ffffff;
+}       
+.neumorphism-flat{
+    box-shadow: inset 8px 8px 16px rgba(0, 0, 0, 0.1),
+    inset -8px -8px 16px #ffffff;
+}
+.neumorphism-soft{
+    box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.05),
+    inset -3px -3px 6px #ffffff;
+}
+
+body{
+    background-color: #e0e5ec;
+    color: #38393b
+}   
