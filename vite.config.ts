@@ -12,9 +12,15 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],   
+  base: '/Finance_Dashboard/',
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
 })
+
