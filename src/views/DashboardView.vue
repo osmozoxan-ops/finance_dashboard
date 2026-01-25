@@ -39,7 +39,7 @@ let bufferTransaction = ref<any>({});
 
 const db = getFirestore();
 const isLoading = ref<boolean>(false);
-const transactionMoney = ref<number>(0);
+const transactionMoney = ref<string>('');
 const transaction = ref<boolean>(false);
 const items = ref<MenuItem[]>([
   {
@@ -87,7 +87,10 @@ const chartData = computed(() => {
   // Суммируем транзакции по категориям (только расходы)
   arrayDataTransaction.value.forEach(transaction => {
     if (!transaction.type && categoryTotals[transaction.category] !== undefined) {
-      categoryTotals[transaction.category] += transaction.transaction;
+      const currentTotal = categoryTotals[transaction.category];
+      if (currentTotal !== undefined) {
+        categoryTotals[transaction.category] = currentTotal + transaction.transaction;
+      }
     }
   });
   
@@ -134,10 +137,10 @@ const chartOptions = ref({
     },
     tooltip: {
       callbacks: {
-        label: function(context) {
+        label: function(context: any) {
           const label = context.label || '';
           const value = context.raw || 0;
-          const total = context.dataset.data.reduce((a, b) => a + b, 0);
+          const total = (context.dataset.data as number[]).reduce((a, b) => a + b, 0);
           const percentage = Math.round((value / total) * 100);
           return `${label}: ${value} (${percentage}%)`;
         }
@@ -159,7 +162,7 @@ const signOutMetod = async(): Promise<void> => {
 }
 
 const disabledSaveButton = computed<boolean>(() => {
-  return transactionMoney.value === 0 ;
+  return transactionMoney.value === '' || isNaN(Number(transactionMoney.value));
 })
 
 const AddNewTransaction = async(): Promise<void> => {
@@ -168,7 +171,7 @@ const AddNewTransaction = async(): Promise<void> => {
   try {
     const payLoad: ITransaction = {
       id: uuidv4(),
-      transaction: transactionMoney.value,
+      transaction: Number(transactionMoney.value),
       type: transaction.value,
       category: selectedItemLabel.value,
       createdAt: new Date(),
@@ -181,7 +184,7 @@ const AddNewTransaction = async(): Promise<void> => {
     }
     
     // Сброс формы
-    transactionMoney.value = 0;
+    transactionMoney.value = '';
     selectedItemLabel.value = 'Выберите категорию';
     selectedIcon.value = 'pi pi-apple';
     
@@ -287,7 +290,7 @@ const totalProfit = computed(() => {
               {{ transaction.category }}
             </div>
             <div class="text-sm text-gray-600">
-              {{ transaction.createdAt.toDate() }}
+              {{ transaction.createdAt }}
             </div>
           </div>
         </div>
@@ -334,9 +337,9 @@ const totalProfit = computed(() => {
         />
 
         <label class="block text-900 font-medium mb-2">Категория</label>
-        <SplitButton 
+        <SplitButton
           :label="selectedItemLabel"
-          :model="items" 
+          :model="(items as any)"
           class="w-full mb-4"
         />
         
@@ -365,17 +368,17 @@ const totalProfit = computed(() => {
         </div>
         
         <label class="block text-900 font-medium mb-2">Сумма</label>
-        <InputText 
-          type="number" 
-          v-model.number="transactionMoney"
+        <InputText
+          type="text"
+          v-model="transactionMoney"
           placeholder="Введите сумму"
           class="w-full mb-4"
         />
 
         <label class="block text-900 font-medium mb-2">Категория</label>
-        <SplitButton 
+        <SplitButton
           :label="selectedItemLabel"
-          :model="items" 
+          :model="(items as any)"
           class="w-full mb-4"
         />
         

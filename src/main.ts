@@ -43,7 +43,7 @@ const CustomAura = {
   semantic: {
     ...Aura.semantic,
     primary: {
-      ...Aura.semantic.primary,
+      ...(Aura.semantic?.primary || {}),
       50: '{sky.50}',
       100: '{sky.100}',
       200: '{sky.200}',
