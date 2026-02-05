@@ -3,11 +3,12 @@ import { createPinia } from 'pinia'
 import { initializeApp } from "firebase/app"
 
 import PrimeVue from 'primevue/config'
-import App from './views/App.vue'
+import App from '../App.vue'
 import router from './router'
 import Aura from '@primeuix/themes/aura';
 
 import 'primeicons/primeicons.css';
+import './custom-styles.css'; // Кастомные стили для перебивания PrimeVue
 
 import ProgressSpinner from 'primevue/progressspinner'
 import Button from 'primevue/button'
@@ -17,7 +18,7 @@ import ToastService from 'primevue/toastservice'
 import ToggleSwitch from 'primevue/toggleswitch'
 import SplitButton from 'primevue/splitbutton'
 import Chart from 'primevue/chart';
-
+import Paginator from 'primevue/paginator';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDNkh9SQ5Ji2gWCjb2U-CSEf8umgd29swE",
@@ -80,4 +81,5 @@ app.component('ProgressSpinner', ProgressSpinner)
 app.component('toggle-switch', ToggleSwitch)
 app.component('split-button', SplitButton)
 app.component('chart', Chart)
+app.component('paginator', Paginator)
 app.mount('#app')

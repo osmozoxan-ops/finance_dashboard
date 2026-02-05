@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import Header from "../components/Header.vue";
+import Header from "./src/components/Header.vue";
 import { onMounted, ref } from 'vue';
-import { useUserStore } from '../stores/user';
+import { useUserStore } from './src/stores/user';
 
 const userStore = useUserStore()
 const isLoading = ref<boolean>(true)
