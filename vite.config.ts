@@ -12,7 +12,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],   
-  base: '/Finance_Dashboard/',
+  base: '/',
   build: {
     outDir: 'dist',
     emptyOutDir: true
