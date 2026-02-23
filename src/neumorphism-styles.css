@@ -1,0 +1,313 @@
+/* Общие неоморфные стили */
+.neumorphism-convex {
+  background: linear-gradient(145deg, #caced4, #f0f5fd);
+  box-shadow: 5px 5px 12px #b8bcc2, -5px -5px 12px #ffffff;
+}
+
+.neumorphism-concave {
+  box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.05),
+    inset -5px -5px 10px #ffffff;
+}
+
+.neumorphism-flat {
+  box-shadow: inset 8px 8px 16px rgba(0, 0, 0, 0.1),
+    inset -8px -8px 16px #ffffff;
+}
+
+.neumorphism-soft {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.05),
+    inset -3px -3px 6px #ffffff;
+}
+
+/* Основной контейнер SplitButton */
+.neumorphism-split-button {
+  /* Общая тень для всей группы кнопок */
+  box-shadow: 6px 6px 12px #c5cad0, -6px -6px 12px #ffffff !important;
+  border-radius: 12px !important;
+}
+
+/* Перебиваем стили кнопок внутри, чтобы они не имели своих теней, 
+   а использовали тень родителя */
+:deep(.p-splitbutton-button), 
+:deep(.p-splitbutton-menubutton) {
+  background: #e0e5ec !important;
+  box-shadow: none !important; /* Убираем индивидуальные тени */
+  color: #3b82f6 !important;
+  font-weight: 600 !important;
+}
+
+/* Линия разделения между основной кнопкой и стрелкой */
+:deep(.p-splitbutton-menubutton) {
+  border-left: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Эффект нажатия (вдавливание всей группы) */
+.neumorphism-split-button:active {
+  box-shadow: inset 4px 4px 8px #c5cad0, inset -4px -4px 8px #ffffff !important;
+  transform: translateY(1px);
+}
+
+/* Стилизация выпадающего меню (как у Select) */
+:deep(.neumorphism-select-panel) {
+  background: #e0e5ec !important;
+  box-shadow: 10px 10px 20px #b8bcc2, -10px -10px 20px #ffffff !important;
+  border-radius: 16px !important;
+  padding: 8px !important;
+}
+
+/* 1. Само поле Select (Вдавленное, как инпут) */
+.p-select.custom-override,
+.custom-override.p-select {
+  background: #e0e5ec !important;
+  box-shadow: inset 5px 5px 10px #b8bcc2, 
+              inset -5px -5px 10px #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 4px 8px !important; /* Уменьшаем внутренний паддинг для Select */
+  transition: all 0.3s ease !important;
+}
+
+/* Убираем фокус-рамку PrimeVue */
+.p-select.custom-override:not(.p-disabled).p-focus {
+  box-shadow: inset 6px 6px 12px #b8bcc2, 
+              inset -6px -6px 12px #ffffff !important;
+}
+
+/* 2. Выпадающая панель (Выпуклая карточка) */
+:deep(.neumorphism-select-panel) {
+  background: #e0e5ec !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 10px 10px 20px #b8bcc2, 
+              -10px -10px 20px #ffffff !important;
+  padding: 8px !important;
+  margin-top: 8px !important;
+}
+
+/* 3. Стили для элементов внутри списка */
+:deep(.p-select-option) {
+  background: transparent !important;
+  color: #38393b !important;
+}
+
+/* Эффект для выбранного элемента (вдавленный мягкий фон) */
+:deep(.p-select-option.p-highlight) {
+  background: #e0e5ec !important;
+  box-shadow: inset 3px 3px 6px #c5cad0, 
+              inset -3px -3px 6px #ffffff !important;
+  color: #3b82f6 !important;
+}
+
+/* Ховер на элементы */
+:deep(.p-select-option:not(.p-highlight):hover) {
+  background: #d1d9e6 !important;
+  border-radius: 8px !important;
+}
+
+
+/* Стили для кнопок */
+.neumorphism-button {
+  background: linear-gradient(145deg, #caced4, #f0f5fd);
+  box-shadow: 5px 5px 12px #b8bcc2, -5px -5px 12px #ffffff;
+  border: none;
+  color: #38393b;
+  font-size: 15px;
+  border-radius: 8px;
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+}
+
+.neumorphism-button:hover {
+  background: linear-gradient(145deg, #caced4, #f0f5fd);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.05);
+}
+
+.neumorphism-button:active {
+  box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.2),
+    inset -5px -5px 10px #ffffff;
+}
+
+.neumorphism-button-primary {
+  background: linear-gradient(145deg, #0ea5e9, #086d9c);
+  color: white;
+}
+
+.neumorphism-button-primary:hover {
+  background: linear-gradient(145deg, #0ea5e9, #086d9c);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.2),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.neumorphism-button-secondary {
+  background: linear-gradient(145deg, #e0e5ec, #f0f5fd);
+  color: #38393b;
+}
+
+.neumorphism-button-secondary:hover {
+  background: linear-gradient(145deg, #e0e5ec, #f0f5fd);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Стили для полей ввода */
+.neumorphism-input {
+  background: #e0e5ec;
+  box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.2),
+    inset -5px -5px 10px #ffffff;
+  border: none;
+  color: #38393b;
+  border-radius: 8px;
+  padding: 12px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.neumorphism-input:focus {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1),
+    inset -3px -3px 6px #ffffff;
+  outline: none;
+}
+
+.neumorphism-button-primary-split, .neumorphism-button-primary, 
+.neumorphism-button-secondary {
+  border: none !important;
+  border-radius: 16px !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Синий акцент для "Добавить" */
+.neumorphism-button-primary-split, .neumorphism-button-primary, 
+.neumorphism-button-secondary {
+  transition: all 0.3s ease !important;
+  cursor: pointer;
+}
+
+.neumorphism-button-primary-split, .neumorphism-button-primary {
+  background: #e0e5ec !important;
+  color: #3b82f6 !important; /* Насыщенный синий */
+  box-shadow: 6px 6px 12px #c5cad0, -6px -6px 12px #ffffff !important;
+}
+
+/* Красный акцент для "Очистить" */
+.neumorphism-button-secondary {
+  background: #e0e5ec !important;
+  color: #ef4444 !important; /* Мягкий красный */
+  box-shadow: 6px 6px 12px #c5cad0, -6px -6px 12px #ffffff !important;
+}
+
+/* Эффект "вдавливания" при нажатии */
+ .neumorphism-button-primary:active,
+.neumorphism-button-secondary:active {
+  box-shadow: inset 4px 4px 8px #c5cad0, inset -4px -4px 8px #ffffff !important;
+  transform: scale(0.97);
+}
+
+/* Эффект при наведении для "Добавить" */
+.neumorphism-button-primary:hover {
+  color: #2563eb !important; /* Углубляем синий */
+  /* Усиливаем тени, кнопка визуально приподнимается */
+  box-shadow: 8px 8px 16px #b8bcc2, -8px -8px 16px #ffffff !important;
+  transform: translateY(-2px); /* Легкий подъем */
+}
+
+/* Эффект при наведении для "Очистить" */
+.neumorphism-button-secondary:hover {
+  color: #dc2626 !important; /* Углубляем красный */
+  /* Усиливаем тени */
+  box-shadow: 8px 8px 16px #b8bcc2, -8px -8px 16px #ffffff !important;
+  transform: translateY(-2px); /* Легкий подъем */
+}
+/* Стили для карточек */
+.neumorphism-card {
+  border-radius: 10px;
+background: #e0e5ec;
+box-shadow:  5px 5px 10px #c5cad0,
+             -5px -5px 10px #fbffff;
+}
+
+
+/* Стили для переключателей */
+.с-toggle {
+  isolation: isolate;
+  position: relative;
+  height: 30px;
+  width: 60px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: -8px -4px 8px 0px #ffffff, 8px 4px 12px 0px #d1d9e6,
+    4px 4px 4px 0px #d1d9e6 inset, -4px -4px 4px 0px #ffffff inset;
+}
+
+.neumorphism-toggle .slider {
+  height: 100%;
+  width: 200%;
+  background: #ecf0f3;
+  border-radius: 15px;
+  transform: translate3d(-75%, 0, 0);
+  transition: transform 0.4s cubic-bezier(0.85, 0.05, 0.18, 1.35);
+  box-shadow: -8px -4px 8px 0px #ffffff, 8px 4px 12px 0px #d1d9e6;
+}
+
+.neumorphism-toggle.checked .slider {
+  transform: translate3d(25%, 0, 0);
+}
+
+/* Стили для выпадающих списков */
+.neumorphism-dropdown {
+  background: linear-gradient(145deg, #caced4, #f0f5fd);
+  box-shadow: 5px 5px 12px #b8bcc2, -5px -5px 12px #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  width: 100%;
+  color: #38393b;
+  transition: all 0.3s ease;
+}
+
+.neumorphism-dropdown:focus {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1),
+    inset -3px -3px 6px #ffffff;
+  outline: none;
+}
+
+/* Стили для пагинатора */
+.neumorphism-paginator {
+  background: linear-gradient(145deg, #caced4, #f0f5fd);
+  box-shadow: 5px 5px 12px #b8bcc2, -5px -5px 12px #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 10px 0;
+  width: 100%;
+  max-width: 600px;
+}
+
+.neumorphism-paginator-page {
+  background: linear-gradient(145deg, #caced4, #f0f5fd);
+  box-shadow: 5px 5px 8px #b8bcc2, -5px -5px 8px rgba(255, 255, 255, 0.5);
+  border: none;
+  color: #38393b;
+  font-size: 14px;
+  margin: 0 2px;
+  border-radius: 6px;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.neumorphism-paginator-page:hover {
+  background: linear-gradient(145deg, #caced4, #f0f5fd);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.05);
+}
+
+.neumorphism-paginator-page.active {
+  background: linear-gradient(145deg, #0ea5e9, #086d9c);
+  color: white;
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.2),
+    inset -3px -3px 6px #086d9c;
+}

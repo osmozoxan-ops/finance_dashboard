@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+/* Импорт неоморфных стилей */
+@import './neumorphism-styles.css';
+@import './custom-styles.css';
+
 .neumorphism-convex{
     background: linear-gradient(145deg, #d9dce1, #f0f5fd);
     box-shadow:  5px 5px 12px #b8bcc2,
@@ -23,5 +27,4 @@ body{
     background-color: #e0e5ec;
     color: #38393b;
     font-family: 'Roboto', sans-serif;
-}   
-
+}

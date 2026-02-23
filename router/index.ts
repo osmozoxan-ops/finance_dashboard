@@ -10,7 +10,15 @@ const requireAuth = (
 ) => {
   const auth = getAuth()
   
-  onAuthStateChanged(auth, (user) => {
+  // Проверяем, есть ли уже текущий пользователь
+  if (auth.currentUser) {
+    next()
+    return
+  }
+  
+  // Если нет, ждем изменения состояния аутентификации
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    unsubscribe() // Отписываемся сразу после получения состояния
     if (user) {
       next()
     } else {
@@ -26,7 +34,15 @@ const requireGuest = (
 ) => {
   const auth = getAuth()
   
-  onAuthStateChanged(auth, (user) => {
+  // Проверяем, есть ли уже текущий пользователь
+  if (!auth.currentUser) {
+    next()
+    return
+  }
+  
+  // Если есть, ждем изменения состояния аутентификации
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    unsubscribe() // Отписываемся сразу после получения состояния
     if (!user) {
       next()
     } else {
@@ -39,19 +55,19 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Login',
-    component: () => import('@/views/LoginView.vue'),
+    component: () => import('../src/presentation/views/LoginView.vue'),
     beforeEnter: requireGuest 
   },
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: () => import('@/views/DashboardView.vue'),
+    component: () => import('../src/presentation/views/DashboardView.vue'),
     beforeEnter: requireAuth
   },
   {
     path: '/transactions',
     name: 'Transactions',
-    component: () => import('@/views/TransactionsView.vue'),
+    component: () => import('../src/presentation/views/TransactionsView.vue'),
     beforeEnter: requireAuth
   }
 

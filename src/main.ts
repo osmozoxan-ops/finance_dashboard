@@ -4,12 +4,13 @@ import { initializeApp } from "firebase/app"
 
 import PrimeVue from 'primevue/config'
 import App from '../App.vue'
-import router from './router'
+import router from '../router'
 import Aura from '@primeuix/themes/aura';
 
 import 'primeicons/primeicons.css';
 import './custom-styles.css'; // Кастомные стили для перебивания PrimeVue
 
+import Tooltip from 'primevue/tooltip';
 import ProgressSpinner from 'primevue/progressspinner'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
@@ -82,4 +83,5 @@ app.component('toggle-switch', ToggleSwitch)
 app.component('split-button', SplitButton)
 app.component('chart', Chart)
 app.component('paginator', Paginator)
+app.directive('tooltip', Tooltip)
 app.mount('#app')
