@@ -160,7 +160,7 @@ const hasExpenses = computed(() => {
     </div>
     <div v-else class="flex items-center justify-center">
       <p>
-        Добавите расходы, чтобы увидеть график
+        Добавьте расходы, чтобы увидеть график
       </p>
     </div>
     </AppLoader>
