@@ -183,9 +183,11 @@
     -4px -4px 4px 0px #ffffff inset;
 }
 .p-toggleswitch.custom-override .p-toggleswitch-state,
-.custom-override.p-toggleswitch .p-toggleswitch-state {
-  display: none;
+.custom-override.p-toggleswitch .p-toggleswitch-state,
+.p-toggleswitch-handle {
+  display: none !important;
 }
+
 
 .p-toggleswitch.custom-override .p-toggleswitch-slider,
 .custom-override.p-toggleswitch .p-toggleswitch-slider {

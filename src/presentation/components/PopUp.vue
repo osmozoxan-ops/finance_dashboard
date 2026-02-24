@@ -26,15 +26,26 @@ const transaction = ref<boolean>(false);
 const transactionMoney = ref<string>('');
 const selectedIcon = ref<string>(DEFAULT_EXPENSE_ICON); 
 const selectedItemLabel = ref<string>('Выберите категорию');
-
+const isTouched = ref(false);
 
 const resetForm = () => {
   transactionMoney.value = '';
   transaction.value = false;
   selectedItemLabel.value = 'Выберите категорию';
   selectedIcon.value = 'pi pi-apple';
+  isTouched.value = false; 
   emit('bufferTransaction', {} as Transaction);
 }
+
+const isMoneyInvalid = computed(() => {
+  if (!isTouched.value) return false;
+  return transactionMoney.value === '' || isNaN(Number(transactionMoney.value)) || Number(transactionMoney.value) <= 0;
+});
+
+const isCategoryInvalid = computed(() => {
+  if (!isTouched.value) return false;
+  return !transaction.value && selectedItemLabel.value === 'Выберите категорию';
+});
 
 const handleAddTransaction = async () => {
   if (disabledSaveButton.value) return;
@@ -142,19 +153,21 @@ watch(transaction, (isIncome) => {
       </div>
 
       <!-- Сумма -->
-      <div class="mb-4">
-        <label class="block text-900 font-medium mb-2">Сумма</label>
+      <div class="mb-4 flex flex-col">
+        <label class="block text-900 font-medium mb-2 uppercase text-xs opacity-50">Сумма</label>
         <InputText
           type="text"
           v-model="transactionMoney"
+          @blur="isTouched = true" 
           placeholder="Введите сумму"
-          class="w-full mb-3 custom-override"
+          :class="['w-full custom-override', { 'input-invalid': isMoneyInvalid }]"
         />
+        <span v-if="isMoneyInvalid" class="error-text">Введите корректное число</span>
       </div>
 
       <!-- Категория (только для расходов) -->
-      <div v-if="!transaction" class="mb-6">
-        <label class="block text-900 font-medium mb-2">Категория</label>
+      <div v-if="!transaction" class="mb-6 flex flex-col">
+        <label class="block text-900 font-medium mb-2 uppercase text-xs opacity-50">Категория</label>
         <SplitButton
           :label="selectedItemLabel"
           :model="items"
@@ -171,6 +184,7 @@ watch(transaction, (isIncome) => {
             item: { class: 'hover:bg-white/20 rounded-lg m-1' }
           }"
         />
+        <span v-if="isCategoryInvalid" class="error-text">Выберите категорию расхода</span>
       </div>
 
       <!-- Кнопки -->
@@ -197,4 +211,28 @@ watch(transaction, (isIncome) => {
 </template>
 
 <style scoped>
+/* Внутренняя красная тень для неоморфизма */
+:deep(.input-invalid), 
+.input-invalid {
+  box-shadow: inset 4px 4px 8px #d1d9e6, 
+              inset -4px -4px 8px #ffffff,
+              inset 0 0 5px rgba(239, 68, 68, 0.4) !important;
+  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Текст ошибки под инпутом */
+.error-text {
+  color: #ef4444;
+  font-size: 11px;
+  margin-top: 4px;
+  margin-left: 4px;
+  font-weight: 600;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 </style>
