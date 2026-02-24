@@ -62,7 +62,8 @@ export function useUser() {
     try {
       await signInUseCase.execute(email, password)
     } catch (error) {
-      console.error('Ошибка при входе:', error)
+      console.error('Ошибка авторизации:', error)
+      throw error 
     }
   }
   const signUp = async (email: string, password: string, name: string) => {
@@ -70,6 +71,7 @@ export function useUser() {
       await signUpUseCase.execute(email, password, name)
     } catch (error) {
       console.error('Ошибка при регистрации:', error)
+      throw error 
     }
   }
   return {

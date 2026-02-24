@@ -32,11 +32,11 @@ const handleAuth = async () => {
     }
     router.push('/dashboard')
   } catch (error: any) {
-    toast.add({ severity: 'error', summary: 'Ошибка входа', detail: error.message, life: 3000 })
+    toast.add({ severity: 'error', summary: 'Ошибка входа', detail: 'Неверынй пароль/email', life: 3000 })
   } finally {
     isLoading.value = false
   }
-}
+} 
 
 const toggleAuth = () => {
   isLogin.value = !isLogin.value
@@ -60,7 +60,6 @@ const isFormValid = computed(() => {
 
 
 <template>
-  <Toast position="bottom-right"> </Toast>
   <div class="flex items-center justify-center min-h-screen">
     <div class="p-8 rounded-lg max-w-md w-full neumorphism-card custom-override m-3">
       <div class="text-center mb-6">

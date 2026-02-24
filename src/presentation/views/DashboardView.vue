@@ -11,6 +11,7 @@ import type { Transaction } from '../../domain/entities/Transaction';
 import AppLoader from '../components/shared/AppLoader.vue';
 import AppConfirm from '../components/shared/AppConfirm.vue'; 
 
+
 const isConfirmVisible = ref<boolean>(false);
 const router = useRouter();
 const {
