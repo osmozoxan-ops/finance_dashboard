@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { SignOutUseCase } from '../../domain/use-cases/user/SignOutUseCase';
 import { SignInUseCase } from '@/domain/use-cases/user/SignInUseCase';
 import { FirebaseUserRepository } from '../../data/repositories/FirebaseUserRepository';
@@ -6,6 +6,7 @@ import { GetProfileUseCase } from '../../domain/use-cases/user/GetProfileUseCase
 import { useUserStore } from '../stores/user' // Импортируем Pinia
 import { SignUpUseCase } from '../../domain/use-cases/user/SignUpUseCase'
 import { useTransaction } from './useTransaction';
+
 
 export function useUser() {
   const userStore = useUserStore() // Инициализируем стор
@@ -76,8 +77,8 @@ export function useUser() {
   }
   return {
     // Теперь мы можем возвращать данные прямо из Pinia!
-    userId: userStore.userId,
-    userName: userStore.userName,
+    userId: computed(() => userStore.userId),
+    userName: computed(() => userStore.userName),
     isLoading,
     loadUser,
     signOut,
