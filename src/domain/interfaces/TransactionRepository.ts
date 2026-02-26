@@ -7,4 +7,4 @@ export interface TransactionRepository {
   update(transaction: Transaction): Promise<void>;
   delete(id: string): Promise<void>;
   deleteAll(): Promise<void>;
-}
+} 

@@ -6,4 +6,4 @@ export interface UserRepository {
   signIn(email: string, password: string): Promise<void>;
   signUp(email: string, password: string, name: string): Promise<void>;
   subscribeToAuthChange(callback: (user: string | null) => void): void;
-}
+} 

@@ -1,38 +1,31 @@
 import { ref, computed } from 'vue';
-import { SignOutUseCase } from '../../domain/use-cases/user/SignOutUseCase';
-import { SignInUseCase } from '@/domain/use-cases/user/SignInUseCase';
-import { FirebaseUserRepository } from '../../data/repositories/FirebaseUserRepository';
-import { GetProfileUseCase } from '../../domain/use-cases/user/GetProfileUseCase'
 import { useUserStore } from '../stores/user' // Импортируем Pinia
-import { SignUpUseCase } from '../../domain/use-cases/user/SignUpUseCase'
 import { useTransaction } from './useTransaction';
-
+import { UserUseCaseFactory } from '@/domain/factories/UserUseCaseFactory';
 
 export function useUser() {
   const userStore = useUserStore() // Инициализируем стор
   const isLoading = ref(false)
   const { clearTransactions } = useTransaction()
   // Инициализируем репозиторий и юзкейсы
-  const userRepository = new FirebaseUserRepository()
-  const getProfileUseCase = new GetProfileUseCase(userRepository)
-  const signOutUseCase = new SignOutUseCase(userRepository)
-  const signInUseCase = new SignInUseCase(userRepository)
-  const signUpUseCase = new SignUpUseCase(userRepository)
+  const authChangeUseCase = UserUseCaseFactory.createSubscribeToAuthChangeUseCase();
+  const getProfileUseCase = UserUseCaseFactory.createGetProfileUseCase();
+  const signOutUseCase = UserUseCaseFactory.createSignOutUseCase();
+  const signInUseCase = UserUseCaseFactory.createSignInUseCase();
+  const signUpUseCase = UserUseCaseFactory.createSignUpUseCase();
 
   const initSession = () => {
     return new Promise<void>((resolve) => {
-      userRepository.subscribeToAuthChange(async (uid) => {
+      authChangeUseCase.execute(async (uid) => {
         if (uid) {
           userStore.userId = uid;
-          // await loadUser(); // Если хочешь сразу имя подгрузить
         } else {
           userStore.userId = '';
         }
-        resolve(); // ДАЕМ СИГНАЛ "МОЖНО ИДТИ ДАЛЬШЕ"
+        resolve();
       });
     });
   };
-
   const loadUser = async () => {
     isLoading.value = true
     try {
@@ -44,7 +37,7 @@ export function useUser() {
     } catch (error) {
       console.error('Ошибка загрузки профиля:', error)
     } finally {
-      isLoading.value = false
+      isLoading.value = false 
     }
   }
 

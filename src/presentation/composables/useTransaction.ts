@@ -1,18 +1,10 @@
 import { ref, computed } from 'vue';
 import type { Transaction } from '../../domain/entities/Transaction';
-import { GetAllTransactionsUseCase } from '../../domain/use-cases/transaction/GetAllTransactionsUseCase';
-import { CreateTransactionUseCase } from '../../domain/use-cases/transaction/CreateTransactionUseCase';
-import { UpdateTransactionUseCase } from '../../domain/use-cases/transaction/UpdateTransactionUseCase';
-import { DeleteTransactionUseCase } from '../../domain/use-cases/transaction/DeleteTransactionUseCase';
-import { FirebaseTransactionRepository } from '../../data/repositories/FirebaseTransactionRepository';
-import { DeleteAllTransactionsUseCase } from '@/domain/use-cases/transaction/DeleteAllTransactionsUseCase';
+import { TransactionUseCaseFactory } from '../../domain/factories/TransactionUseCaseFactory';
 import type { CreateTransactionParams } from '@/shared/types/transaction-params';
-import { GetCategoryStatisticsUseCase } from '@/domain/use-cases/transaction/GetCategoryStatisticsUseCase';
-import { FilterTransactionsUseCase } from '@/domain/use-cases/transaction/FilterTransactionsUseCase';
 import type { TransactionFilterType } from '../../domain/entities/TransactionFilterType';
 import type { MonthFilter } from '../../domain/entities/MonthFilter';
-import { GetAvailableMonthsUseCase } from '../../domain/use-cases/transaction/GetAvailableMonthsUseCase';
-import { GroupTransactionsByDateUseCase } from '@/domain/use-cases/transaction/GroupTransactionsByDateUseCase';
+
 
 // ГЛОБАЛЬНОЕ СОСТОЯНИЕ (вынесено за пределы функции)
 const currentFilter = ref<TransactionFilterType>('all');
@@ -22,19 +14,16 @@ const clearTransactions = () => {transactions.value = [];};
 const selectedMonth = ref<MonthFilter | null>(null);
 
 export function useTransaction() {
-  // Теперь все компоненты будут использовать одни и те же ref-переменные
-  
+  const getAllTransactionsUseCase = TransactionUseCaseFactory.createGetAllTransactionsUseCase();
+  const createTransactionUseCase = TransactionUseCaseFactory.createCreateTransactionUseCase();
+  const updateTransactionUseCase = TransactionUseCaseFactory.createUpdateTransactionUseCase();
+  const deleteTransactionUseCase = TransactionUseCaseFactory.createDeleteTransactionUseCase();
+  const deleteAllTransactionUseCase = TransactionUseCaseFactory.createDeleteAllTransactionsUseCase();
+  const getStatsUseCase = TransactionUseCaseFactory.createGetCategoryStatisticsUseCase();
+  const filterTransactionsUseCase = TransactionUseCaseFactory.createFilterTransactionsUseCase();
+  const getAvailableMonthsUseCase = TransactionUseCaseFactory.createGetAvailableMonthsUseCase();
+  const groupTransactionsByDateUseCase = TransactionUseCaseFactory.createGroupTransactionsByDateUseCase();
 
-const getStatsUseCase = new GetCategoryStatisticsUseCase();
-const transactionRepository = new FirebaseTransactionRepository();
-const getAllTransactionsUseCase = new GetAllTransactionsUseCase(transactionRepository);
-const createTransactionUseCase = new CreateTransactionUseCase(transactionRepository);
-const updateTransactionUseCase = new UpdateTransactionUseCase(transactionRepository);
-const deleteTransactionUseCase = new DeleteTransactionUseCase(transactionRepository);
-const deleteAllTransactionUseCase = new DeleteAllTransactionsUseCase(transactionRepository);
-const filterTransactionsUseCase = new FilterTransactionsUseCase();
-const getAvailableMonthsUseCase = new GetAvailableMonthsUseCase();
-const groupTransactionsByDateUseCase = new GroupTransactionsByDateUseCase();
 
  const groupedTransactions = computed(() => {
     return groupTransactionsByDateUseCase.execute(filteredTransactions.value);
