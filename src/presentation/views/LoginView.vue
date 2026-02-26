@@ -61,14 +61,14 @@ const isFormValid = computed(() => {
 })
 
 const isEmailInvalid = computed(() => {
-  if (!emailTouched.value) return false;
+  if (!emailTouched.value || email.value.length === 0) return false;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return email.value.length < 7 || !emailRegex.test(email.value);
 });
 
 // Валидация Пароля (минимум 6 или 7 символов, как ты хочешь)
 const isPasswordInvalid = computed(() => {
-  if (!passwordTouched.value) return false;
+  if (!passwordTouched.value || password.value.length === 0) return false;
   return password.value.length > 0 && password.value.length < 7;
 });
 
