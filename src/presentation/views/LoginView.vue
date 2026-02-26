@@ -19,7 +19,8 @@ const isLoading = ref(false)
 const isLogin = ref(true)
 const passwordAutocomplete = computed(() => 
   isLogin.value ? 'current-password' : 'new-password'
-)
+) 
+
 
 // Метод Входа
 const handleAuth = async () => {
@@ -61,7 +62,7 @@ const isFormValid = computed(() => {
 
 <template>
   <div class="flex items-center justify-center min-h-screen">
-    <div class="p-8 rounded-lg max-w-md w-full neumorphism-card custom-override m-3">
+    <div class="p-8 rounded-lg max-w-md w-full neumorphism-card custom-override">
       <div class="text-center mb-6">
         <div class="text-900 text-3xl font-medium mb-3">Приветствую!</div>
         <span class="text-600 font-medium line-height-3">{{ subtitleText }}</span>

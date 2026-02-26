@@ -13,7 +13,7 @@ onMounted(async() => {
 </script>
 
 <template>
-  <main>
+  <main class="app">
     <Toast position="bottom-right" :pt="{
     root: { class: 'opacity-90' },
     message: { class: 'neumorphism-card border-none rounded-2xl shadow-xl' },
@@ -28,4 +28,8 @@ onMounted(async() => {
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.app {
+  margin: 10px;
+}
+</style>
