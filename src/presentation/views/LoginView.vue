@@ -12,6 +12,8 @@ const router = useRouter()
 // Настраиваем сервисы
 const { signIn, signUp } = useUser();
 
+const emailTouched = ref(false);
+const passwordTouched = ref(false);
 const email = ref('')
 const password = ref('')
 const name = ref('')
@@ -57,6 +59,19 @@ const isFormValid = computed(() => {
   
   return validEmail && validPass && validName
 })
+
+const isEmailInvalid = computed(() => {
+  if (!emailTouched.value) return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return email.value.length < 7 || !emailRegex.test(email.value);
+});
+
+// Валидация Пароля (минимум 6 или 7 символов, как ты хочешь)
+const isPasswordInvalid = computed(() => {
+  if (!passwordTouched.value) return false;
+  return password.value.length > 0 && password.value.length < 7;
+});
+
 </script>
 
 
@@ -87,15 +102,20 @@ const isFormValid = computed(() => {
           />
         </div>
         
-        <label for="email1" class="block text-900 font-medium mb-2">Email</label>
-        <InputText
-          v-model="email"
-          autocomplete="username"
-          id="email1"
-          type="email"
-          class="w-full mb-3 custom-override"
-          placeholder="Введите email"
-        />
+        <div class="mb-3">
+          <label for="email1" class="block text-900 font-medium mb-2">Email</label>
+          <InputText
+            v-model="email"
+            autocomplete="username"
+            id="email1"
+            type="email"
+            class="w-full  custom-override"
+            placeholder="Введите email"
+            @blur = "emailTouched = true"
+            :class="['w-full custom-override', { 'input-invalid': isEmailInvalid }]"
+          />
+          <span v-if="isEmailInvalid" class="error-text">Неверный формат email</span>
+        </div>
 
         <label for="password1" class="block text-900 font-medium mb-2">Пароль</label>
         <InputText
@@ -103,10 +123,12 @@ const isFormValid = computed(() => {
           :autocomplete="passwordAutocomplete"
           id="password1"
           type="password"
-          class="w-full mb-3 custom-override"
-          placeholder="Введите пароль"
+          class="w-full  custom-override"
+          placeholder="от 7 символов"
+          @blur = "passwordTouched = true"
+          :class="['w-full custom-override', { 'input-invalid': isPasswordInvalid }]"
         />
-
+          <span v-if="isPasswordInvalid" class="error-text">Пароль должен быть больше 7 символов</span>
           <Button
                       :disabled="!isFormValid"
                       :label="submitButtonText"
@@ -120,3 +142,29 @@ const isFormValid = computed(() => {
     </div>
   </div>
 </template>
+<style scoped>
+/* Внутренняя красная тень для неоморфизма */
+:deep(.input-invalid), 
+.input-invalid {
+  box-shadow: inset 4px 4px 8px #d1d9e6, 
+              inset -4px -4px 8px #ffffff,
+              inset 0 0 5px rgba(239, 68, 68, 0.4) !important;
+  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Текст ошибки под инпутом */
+.error-text {
+  color: #ef4444;
+  font-size: 11px;
+  margin-top: 4px;
+  margin-left: 4px;
+  font-weight: 600;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+</style>
