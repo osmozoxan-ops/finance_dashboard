@@ -1,6 +1,7 @@
 import type { User } from '../../domain/entities/User';
 import type { UserRepository } from '../../domain/interfaces/UserRepository';
-import { getAuth, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged} from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
 
 export class FirebaseUserRepository implements UserRepository {
   private get auth() {
@@ -25,7 +26,7 @@ export class FirebaseUserRepository implements UserRepository {
       };
     }
     return null;
-  }
+  } 
   
   async signOut(): Promise<void> {
     await signOut(this.auth);
@@ -40,4 +41,5 @@ export class FirebaseUserRepository implements UserRepository {
     // Обновляем имя в профиле Firebase сразу после создания
     await updateProfile(userCredential.user, { displayName: name });
   }
+
 }

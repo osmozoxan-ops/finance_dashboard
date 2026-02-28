@@ -72,13 +72,13 @@ onMounted(async () => {
               @click="setFilter('expense')"
               icon="pi pi-arrow-up-right"
               className="neumorphism-button-primary"
-              v-tooltip.bottom="'Доходы'"
+              v-tooltip.bottom="'Расходы'"
             />
             <AppMiniButton
               @click="setFilter('all')"
               icon="pi pi-list"
               className="neumorphism-button-primary"
-              v-tooltip.bottom="'Доходы'"
+              v-tooltip.bottom="'Все операции'"
             />
           </div>
         </div>

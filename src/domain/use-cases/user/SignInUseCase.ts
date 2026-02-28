@@ -1,4 +1,3 @@
-// src/domain/use-cases/users/SignInUseCase.ts
 import type { UserRepository } from '../../interfaces/UserRepository';
 
 export class SignInUseCase {

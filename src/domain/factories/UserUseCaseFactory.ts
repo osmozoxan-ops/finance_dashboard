@@ -26,7 +26,7 @@ export class UserUseCaseFactory {
   static createSubscribeToAuthChangeUseCase() {
     return new SubscribeToAuthChangeUseCase(this.userRepository);
   }
-}
+} 
 
 
  

@@ -1,30 +1,22 @@
+
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteLocationNormalized, NavigationGuardNext, RouteRecordRaw } from 'vue-router'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { useUserStore } from '@/presentation/stores/user'
 
-
+// Гварды теперь максимально простые и чистые
 const requireAuth = (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  const auth = getAuth()
+  const userStore = useUserStore()
   
-  // Проверяем, есть ли уже текущий пользователь
-  if (auth.currentUser) {
+  // Если ID пользователя в сторе есть — пускаем, если нет — на логин
+  if (userStore.userId) {
     next()
-    return
+  } else {
+    next('/')
   }
-  
-  // Если нет, ждем изменения состояния аутентификации
-  const unsubscribe = onAuthStateChanged(auth, (user) => {
-    unsubscribe() // Отписываемся сразу после получения состояния
-    if (user) {
-      next()
-    } else {
-      next('/')
-    }
-  })
 }
 
 const requireGuest = (
@@ -32,29 +24,21 @@ const requireGuest = (
   from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  const auth = getAuth()
+  const userStore = useUserStore()
   
-  // Проверяем, есть ли уже текущий пользователь
-  if (!auth.currentUser) {
+  // Если пользователь уже вошел — отправляем на дашборд, не даем логиниться снова
+  if (!userStore.userId) {
     next()
-    return
+  } else {
+    next('/dashboard')
   }
-  
-  // Если есть, ждем изменения состояния аутентификации
-  const unsubscribe = onAuthStateChanged(auth, (user) => {
-    unsubscribe() // Отписываемся сразу после получения состояния
-    if (!user) {
-      next()
-    } else {
-      next('/dashboard')
-    }
-  })
 }
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Login',
+    // Динамический импорт для оптимизации (Lazy Loading)
     component: () => import('../src/presentation/views/LoginView.vue'),
     beforeEnter: requireGuest 
   },
@@ -70,12 +54,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../src/presentation/views/TransactionsView.vue'),
     beforeEnter: requireAuth
   }
-
 ]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: routes
+  routes
 })
 
 export default router
