@@ -173,7 +173,7 @@ watch(() => props.showPopupNew, (isOpen) => {
     :pt="{
         header: { class: 'hidden' },
         content: { 
-          class: 'p-3!' 
+          class: 'p-5!' 
         },
     }"
   >
