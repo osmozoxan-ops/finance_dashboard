@@ -169,7 +169,7 @@ watch(() => props.showPopupNew, (isOpen) => {
     :showHeader="false"
     :dismissableMask="true"
     :closable="false"
-    class="neumorphism-card! bg-[#e0e5ec]! border-none! p-6! rounded-3xl! "
+    class="neumorphism-card! bg-[#e0e5ec]! border-none! p-6! rounded-3xl! w-[90vw]! max-w-[440px]!"
     :pt="{
         header: { class: 'hidden' },
         content: { 
@@ -178,7 +178,7 @@ watch(() => props.showPopupNew, (isOpen) => {
     }"
   >
   
-    <div class="neumorphism-card! bg-[#e0e5ec]! border-none! rounded-3xl! w-[90vw]! max-w-[330px]!">
+    <div class="neumorphism-card! bg-[#e0e5ec]! border-none! rounded-3xl!">
       
       <!-- Тип транзакции -->
       <div class="flex flex-col mb-4">
