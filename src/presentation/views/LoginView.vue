@@ -35,7 +35,7 @@ const handleAuth = async () => {
     }
     router.push('/dashboard')
   } catch (error: any) {
-    toast.add({ severity: 'error', summary: 'Ошибка входа', detail: 'Неверынй пароль/email', life: 3000 })
+    toast.add({ severity: 'error', summary: 'Ошибка входа', detail: 'Неверный email или пароль', life: 3000 })
   } finally {
     isLoading.value = false
   }
@@ -54,7 +54,7 @@ const submitButtonText = computed(() => isLogin.value ? 'Вход' : 'Регис
 const isFormValid = computed(() => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   const validEmail = emailRegex.test(email.value)
-  const validPass = password.value.length >= 6
+  const validPass = password.value.length >= 7
   const validName = isLogin.value ? true : name.value.trim().length >= 2
   
   return validEmail && validPass && validName
@@ -66,7 +66,7 @@ const isEmailInvalid = computed(() => {
   return email.value.length < 7 || !emailRegex.test(email.value);
 });
 
-// Валидация Пароля (минимум 6 или 7 символов, как ты хочешь)
+// Валидация Пароля (минимум 7 символов)
 const isPasswordInvalid = computed(() => {
   if (!passwordTouched.value || password.value.length === 0) return false;
   return password.value.length > 0 && password.value.length < 7;
@@ -124,11 +124,11 @@ const isPasswordInvalid = computed(() => {
           id="password1"
           type="password"
           class="w-full  custom-override"
-          placeholder="от 7 символов"
+          placeholder="Минимум 7 символов"
           @blur = "passwordTouched = true"
           :class="['w-full custom-override', { 'input-invalid': isPasswordInvalid }]"
         />
-          <span v-if="isPasswordInvalid" class="error-text">Пароль должен быть больше 7 символов</span>
+          <span v-if="isPasswordInvalid" class="error-text">Пароль должен быть не короче 7 символов</span>
           <Button
                       :disabled="!isFormValid"
                       :label="submitButtonText"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Transaction } from '../../domain/entities/Transaction';
 import ArrayTransactions from '../components/ArrayTransactions.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import PopUp from '../components/PopUp.vue';
 import Select from 'primevue/select';
 import { useTransaction } from '../composables/useTransaction';
@@ -9,11 +9,13 @@ import { useUser } from '../composables/useUser';
 import Tooltip from 'primevue/tooltip';
 import AppMiniButton from '../components/shared/AppMiniButton.vue';
 import AppConfirm from '../components/shared/AppConfirm.vue'; 
+import type { TransactionFilterType } from '../../domain/entities/TransactionFilterType';
 
 const isConfirmVisible = ref<boolean>(false);
 const vTooltip = Tooltip; 
 const {  loadTransactions,
   setFilter,
+  activeFilter,
   selectedMonth,
   availableMonths,
   deleteAllTransactions } = useTransaction();
@@ -21,6 +23,14 @@ const { loadUser } = useUser();
 
 const showPopupNew = ref<boolean>(false);
 const bufferTransaction = ref<Transaction | null>(null);
+
+const periodLabel = computed(() => selectedMonth.value?.label ?? 'Все время');
+
+const filterButtonClass = (filter: TransactionFilterType) => {
+  return activeFilter.value === filter
+    ? 'neumorphism-button-primary filter-active'
+    : 'neumorphism-button-primary';
+};
 
 onMounted(async () => {
   await loadUser();
@@ -65,19 +75,19 @@ onMounted(async () => {
             <AppMiniButton
               @click="setFilter('income')"
               icon="pi pi-arrow-down-left"
-              className="neumorphism-button-primary"
+              :className="filterButtonClass('income')"
               v-tooltip.bottom="'Доходы'"
             />
            <AppMiniButton
               @click="setFilter('expense')"
               icon="pi pi-arrow-up-right"
-              className="neumorphism-button-primary"
+              :className="filterButtonClass('expense')"
               v-tooltip.bottom="'Расходы'"
             />
             <AppMiniButton
               @click="setFilter('all')"
               icon="pi pi-list"
-              className="neumorphism-button-primary"
+              :className="filterButtonClass('all')"
               v-tooltip.bottom="'Все операции'"
             />
           </div>
@@ -107,7 +117,7 @@ onMounted(async () => {
        <router-link to="/dashboard" class="flex-1">
       <Button
         label="Назад"
-        icon="pi pi-home"
+        icon="pi pi-arrow-left"
         class="w-full neumorphism-button-primary"
       />
     </router-link>
@@ -125,4 +135,10 @@ onMounted(async () => {
   
 </template>
 
-<style scoped></style>
+<style scoped>
+.filter-active {
+  /* эффект "нажато" */
+  box-shadow: inset 4px 4px 8px #c5cad0, inset -4px -4px 8px #ffffff !important;
+  transform: scale(0.98);
+}
+</style>

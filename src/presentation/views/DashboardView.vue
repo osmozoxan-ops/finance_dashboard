@@ -29,16 +29,9 @@ const { userName, loadUser, signOut } = useUser();
 const showPopupNew = ref<boolean>(false);
 const bufferTransaction = ref<Transaction | null>(null);
 
-const isChartReady = ref(false);
-
 onMounted(async () => {
   await loadUser();
   await loadTransactions();
-  
-  // Даем браузеру 100мс, чтобы отрисовать блок после лоадера
-  setTimeout(() => {
-    isChartReady.value = true;
-  }, 100);
 });
 
 const signOutMethod = async (): Promise<void> => {
@@ -175,14 +168,14 @@ const hasExpenses = computed(() => {
       shape="circle" 
       class-name="mx-auto"
     >
-    <div v-if="hasExpenses" >
-      <Chart v-if="isChartReady" type="pie" :data="chartData" :options="chartOptions" />
-    </div>
-    <div v-else class="flex items-center justify-center">
-      <p>
-        Добавьте расходы, чтобы увидеть график
-      </p>
-    </div>
+      <div v-if="hasExpenses">
+        <Chart type="pie" :data="chartData" :options="chartOptions" />
+      </div>
+      <div v-else class="flex items-center justify-center text-center px-4">
+        <p>
+          Пока нет расходов. Создайте первую транзакцию-расход, чтобы увидеть статистику.
+        </p>
+      </div>
     </AppLoader>
     </div>
 <div class="grid grid-cols-2 gap-4 w-full max-w-lg my-4">

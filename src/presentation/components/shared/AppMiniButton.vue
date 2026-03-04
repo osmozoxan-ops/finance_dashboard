@@ -12,7 +12,7 @@ defineProps<{
         v-bind="$attrs"
         :icon="icon"
         :class="[
-            'rounded-sm! w-10! h-10!', 
+            'rounded-sm! w-11! h-11!', 
         className
     ]"
     />

@@ -21,19 +21,3 @@ import ConfirmDialog from 'primevue/confirmdialog';
     <RouterView />
   </main>
 </template>
-
-<style>
-/* Глобальные стили для всего приложения */
-body {
-  background-color: #e0e5ec;
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', sans-serif;
-}
-
-.app {
-  /* Вместо Tailwind-класса пишем чистый CSS или используем @apply */
-  min-height: 100vh;
-  padding: 10px;
-}
-</style>

@@ -46,6 +46,9 @@ export function useTransaction() {
   const setFilter = (filter: TransactionFilterType) =>{
     currentFilter.value = filter
   }
+
+  const activeFilter = computed(() => currentFilter.value);
+
   const loadTransactions = async () => {
     // Если данные уже есть, не загружаем повторно (по желанию)
     if (transactions.value.length > 0) return; 
@@ -180,6 +183,7 @@ export function useTransaction() {
     clearTransactions,
     filteredTransactions,
     setFilter,
+    activeFilter,
     availableMonths,
     selectedMonth, 
     groupedTransactions

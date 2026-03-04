@@ -15,7 +15,7 @@ import { useUser } from '@/presentation/composables/useUser'
 
 // Импорт стилей
 import 'primeicons/primeicons.css'
-import './custom-styles.css'
+import './style.css'
 
 // Импорт компонентов PrimeVue
 import ProgressSpinner from 'primevue/progressspinner'
