@@ -46,16 +46,36 @@ const signOutMethod = async (): Promise<void> => {
   router.push('/');
 };
 
+const CATEGORY_COLORS: Record<string, string> = {
+  Еда: '#FF6384',
+  Транспорт: '#36A2EB',
+  Здоровье: '#4BC0C0',
+  Развлечения: '#FFCE56',
+  Прочее: '#9966FF',
+  Доход: '#22C55E'
+};
+
+const getCategoryColor = (label: string): string => {
+  return CATEGORY_COLORS[label] ?? '#94A3B8';
+};
+
 // Вычисляем данные для графика
-const chartData = computed(() => ({
-  labels: categoryStats.value.map(s => s.label),
-  datasets: [{
-    data: categoryStats.value.map(s => s.total),
-    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-    borderWidth: 2,
-    borderColor: '#fff'
-  }]
-}));
+const chartData = computed(() => {
+  // 1. Фильтруем статистику: оставляем только те категории, где total > 0
+  const activeStats = categoryStats.value.filter(s => s.total > 0);
+
+  return {
+    // 2. Берем ярлыки только активных категорий
+    labels: activeStats.map(s => s.label),
+    datasets: [{
+      // 3. Берем суммы только активных категорий
+      data: activeStats.map(s => s.total),
+      backgroundColor: activeStats.map(s => getCategoryColor(s.label)),
+      borderWidth: 2,
+      borderColor: '#fff'
+    }]
+  };
+});
 
 const chartOptions = ref({
   responsive: true,

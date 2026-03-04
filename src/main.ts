@@ -1,25 +1,32 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { initializeApp } from "firebase/app"
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 import PrimeVue from 'primevue/config'
+import Aura from '@primeuix/themes/aura'
+import ToastService from 'primevue/toastservice'
+import Tooltip from 'primevue/tooltip'
+
 import App from '../App.vue'
 import router from '../router'
-import Aura from '@primeuix/themes/aura';
+import { useUserStore } from '@/presentation/stores/user'
+import { useUser } from '@/presentation/composables/useUser'
 
-import 'primeicons/primeicons.css';
-import './custom-styles.css'; // Кастомные стили для перебивания PrimeVue
+// Импорт стилей
+import 'primeicons/primeicons.css'
+import './custom-styles.css'
 
-import Tooltip from 'primevue/tooltip';
+// Импорт компонентов PrimeVue
 import ProgressSpinner from 'primevue/progressspinner'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Toast from 'primevue/toast'
-import ToastService from 'primevue/toastservice'
 import ToggleSwitch from 'primevue/toggleswitch'
 import SplitButton from 'primevue/splitbutton'
-import Chart from 'primevue/chart';
-import Paginator from 'primevue/paginator';
+import Chart from 'primevue/chart'
+import Paginator from 'primevue/paginator'
+import Select from 'primevue/select'
 
 const firebaseConfig = {
   apiKey: "AIzaSyDNkh9SQ5Ji2gWCjb2U-CSEf8umgd29swE",
@@ -31,39 +38,30 @@ const firebaseConfig = {
   measurementId: "G-229H1NEERL"
 }
 
-// Initialize Firebase
+// 1. Инициализируем Firebase ПЕРЕД созданием приложения
 initializeApp(firebaseConfig)
+const auth = getAuth()
 
 const app = createApp(App)
+const pinia = createPinia()
 
-app.use(createPinia())
-app.use(router)
+app.use(pinia)
 app.use(ToastService)
-// Создаем кастомизированную тему на основе Aura с голубым цветом
+
+// Настройка кастомной темы
 const CustomAura = {
   ...Aura,
   semantic: {
     ...Aura.semantic,
     primary: {
-      ...(Aura.semantic?.primary || {}),
-      50: '{sky.50}',
-      100: '{sky.100}',
-      200: '{sky.200}',
-      300: '{sky.300}',
-      400: '{sky.400}',
-      500: '{sky.500}',
-      600: '{sky.600}',
-      700: '{sky.700}',
-      800: '{sky.800}',
-      900: '{sky.900}',
-      950: '{sky.950}'
+      50: '{sky.50}', 100: '{sky.100}', 200: '{sky.200}', 300: '{sky.300}',
+      400: '{sky.400}', 500: '{sky.500}', 600: '{sky.600}', 700: '{sky.700}',
+      800: '{sky.800}', 900: '{sky.900}', 950: '{sky.950}'
     }
   }
-};
+}
 
-// Используем PrimeVue (после router)
 app.use(PrimeVue, {
-    // Default theme configuration
     theme: {
         preset: CustomAura,
         options: {
@@ -72,9 +70,9 @@ app.use(PrimeVue, {
             cssLayer: false
         }
     }
-});
+})
 
-// Регистрируем компоненты глобально
+// Глобальная регистрация твоих компонентов
 app.component('Button', Button)
 app.component('InputText', InputText) 
 app.component('Toast', Toast)
@@ -83,5 +81,29 @@ app.component('toggle-switch', ToggleSwitch)
 app.component('split-button', SplitButton)
 app.component('chart', Chart)
 app.component('paginator', Paginator)
+app.component('Select', Select)
 app.directive('tooltip', Tooltip)
-app.mount('#app')
+
+// 2. ГЛАВНЫЙ ЗАМОК ДЛЯ РОУТЕРА
+let isAppMounted = false
+
+// Слушаем состояние авторизации ПЕРЕД тем, как запустить роутер и смонтировать приложение
+onAuthStateChanged(auth, async (user) => {
+  const userStore = useUserStore()
+  const { loadUser } = useUser()
+
+  if (user) {
+    userStore.userId = user.uid
+    // Подгружаем имя и лимит ПЕРЕД тем, как роутер проверит права доступа
+    await loadUser() 
+  } else {
+    userStore.userId = ''
+  }
+
+  // Монтируем только один раз при первом ответе от Firebase
+  if (!isAppMounted) {
+    app.use(router) // Теперь роутер увидит уже заполненный Store
+    app.mount('#app')
+    isAppMounted = true
+  }
+})

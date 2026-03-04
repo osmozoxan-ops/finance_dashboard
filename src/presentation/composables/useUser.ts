@@ -13,7 +13,22 @@ export function useUser() {
   const signOutUseCase = UserUseCaseFactory.createSignOutUseCase();
   const signInUseCase = UserUseCaseFactory.createSignInUseCase();
   const signUpUseCase = UserUseCaseFactory.createSignUpUseCase();
+  const setUserLimitUseCase = UserUseCaseFactory.createSetUserLimitUseCase();
 
+const setUserLimit = async (limit: number) => {
+  try {
+    // 1. Сначала сохраняем в базу через UseCase
+    await setUserLimitUseCase.execute(limit)
+    
+    // 2. ЕСЛИ СОХРАНИЛОСЬ — обновляем Pinia
+    // Теперь во всем приложении мгновенно отобразится новый лимит
+    userStore.setUserLimit(limit) 
+    
+  } catch (error) {
+    console.error('Ошибка при установке лимита:', error)
+    throw error 
+  }
+}
   const initSession = () => {
     return new Promise<void>((resolve) => {
       authChangeUseCase.execute(async (uid) => {
@@ -32,7 +47,7 @@ export function useUser() {
       const userEntity = await getProfileUseCase.execute()
       if (userEntity) {
         // СИНХРОНИЗАЦИЯ С PINIA
-        userStore.setUser(userEntity.id, userEntity.name)
+        userStore.setUser(userEntity.id, userEntity.name, userEntity.monthlyLimit)
       }
     } catch (error) {
       console.error('Ошибка загрузки профиля:', error)
@@ -77,6 +92,7 @@ export function useUser() {
     signOut,
     signIn,
     signUp,
-    initSession
+    initSession,
+    setUserLimit
   }
 }

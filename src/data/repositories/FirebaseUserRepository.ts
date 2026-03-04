@@ -1,11 +1,15 @@
 import type { User } from '../../domain/entities/User';
 import type { UserRepository } from '../../domain/interfaces/UserRepository';
 import { getAuth, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged} from 'firebase/auth';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, getFirestore } from 'firebase/firestore';
 
 export class FirebaseUserRepository implements UserRepository {
   private get auth() {
     return getAuth();
+  }
+
+  private get db() {
+    return getFirestore();
   }
   
   subscribeToAuthChange(callback: (userId: string | null) => void): void {
@@ -41,5 +45,15 @@ export class FirebaseUserRepository implements UserRepository {
     // Обновляем имя в профиле Firebase сразу после создания
     await updateProfile(userCredential.user, { displayName: name });
   }
+
+  async updateLimit(limit: number): Promise<void> {
+  const user = this.auth.currentUser;
+  if (user) {
+    const userRef = doc(this.db, 'users', user.uid);
+    await updateDoc(userRef, { monthlyLimit: limit }); 
+  } else {
+    throw new Error('Пользователь не найден для обновления лимита');
+  }
+}
 
 }

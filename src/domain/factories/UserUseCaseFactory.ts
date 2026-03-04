@@ -4,6 +4,7 @@ import { SignInUseCase } from '../use-cases/user/SignInUseCase';
 import { SignUpUseCase } from '../use-cases/user/SignUpUseCase';
 import { GetProfileUseCase } from '../use-cases/user/GetProfileUseCase'
 import { SubscribeToAuthChangeUseCase } from '../use-cases/user/SubscribeToAuthChangeUseCase';
+import { SetUserLimitUseCase } from '../use-cases/user/SetUserLimitUseCase';
 export class UserUseCaseFactory {
   private static userRepository = new FirebaseUserRepository();
   
@@ -25,6 +26,10 @@ export class UserUseCaseFactory {
   
   static createSubscribeToAuthChangeUseCase() {
     return new SubscribeToAuthChangeUseCase(this.userRepository);
+  }
+
+  static createSetUserLimitUseCase() {
+    return new SetUserLimitUseCase(this.userRepository);
   }
 } 
 

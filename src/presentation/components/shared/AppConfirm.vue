@@ -13,13 +13,13 @@ const emit = defineEmits(['update:visible', 'accept', 'reject']);
 <!-- AppConfirm.vue -->
 <template>
   <Dialog 
+    :dismissableMask="true" 
     :visible="visible" 
     @update:visible="$emit('update:visible', $event)"
     modal
     :closable="false"
     class="neumorphism-card! bg-[#e0e5ec]! border-none! p-6! rounded-3xl! w-[90vw]! max-w-[400px]!"
     :pt="{
-        mask: { class: 'backdrop-blur-sm bg-white/10' },
         header: { class: 'hidden' }
     }"
   >

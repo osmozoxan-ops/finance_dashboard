@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { TRANSACTION_CATEGORIES, DEFAULT_INCOME_ICON, DEFAULT_EXPENSE_ICON } from '../../domain/constants/Categories';
+import { TRANSACTION_CATEGORIES, DEFAULT_EXPENSE_ICON } from '../../domain/constants/Categories';
 import { ref, computed, watch } from 'vue';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
-import SplitButton from 'primevue/splitbutton';
+import Select from 'primevue/select';
+import Dialog from 'primevue/dialog';
 import ToggleSwitch from 'primevue/toggleswitch';
 import { useTransaction } from '../composables/useTransaction';
 import type { Transaction } from '../../domain/entities/Transaction';
+import type { CategoryItem } from '../../domain/entities/CategoryItem';
+
 
 const props = defineProps<{
   showPopupNew: boolean;
@@ -27,13 +30,21 @@ const transactionMoney = ref<string>('');
 const selectedIcon = ref<string>(DEFAULT_EXPENSE_ICON); 
 const selectedItemLabel = ref<string>('Выберите категорию');
 const isTouched = ref(false);
+const selectedCategoryObject = ref<CategoryItem | null>(null);
 
 const resetForm = () => {
   transactionMoney.value = '';
   transaction.value = false;
+  
+  // Сбрасываем объект для компонента Select
+  selectedCategoryObject.value = null; 
+  
+  // Сбрасываем текстовые метки для логики сохранения
   selectedItemLabel.value = 'Выберите категорию';
   selectedIcon.value = 'pi pi-apple';
+  
   isTouched.value = false; 
+  
   emit('bufferTransaction', {} as Transaction);
 }
 
@@ -54,7 +65,9 @@ const handleAddTransaction = async () => {
     await createTransaction({
       transaction: Number(transactionMoney.value),
       type: transaction.value,
-      category: transaction.value ? 'Доход' : selectedItemLabel.value,
+      category: transaction.value 
+        ? 'Доход' 
+        : (selectedCategoryObject.value?.label || 'Выберите категорию'),
       icon: selectedIcon.value
     });
     resetForm();
@@ -66,6 +79,13 @@ const handleAddTransaction = async () => {
   }
 };
 
+const onCategoryChange = (event: any) => {
+  // Вытаскиваем данные из выбранного объекта
+  const { label, icon } = event.value;
+  selectedItemLabel.value = label;
+  selectedIcon.value = icon;
+};
+
 const handleEditTransaction = async () => {
   isLoading.value = true;
   try {
@@ -73,7 +93,9 @@ const handleEditTransaction = async () => {
       id: props.bufferTransaction.id || '',
       transaction: Number(transactionMoney.value),
       type: transaction.value,
-      category: transaction.value ? 'Доход' : selectedItemLabel.value,
+      category: transaction.value 
+        ? 'Доход' 
+        : (selectedCategoryObject.value?.label || 'Выберите категорию'),
       createdAt: props.bufferTransaction.createdAt || new Date(),
       icon: selectedIcon.value
     });
@@ -117,34 +139,46 @@ watch(() => props.showPopupNew, (isOpen) => {
   if (isOpen && bufferPopUp.value) {
     transactionMoney.value = props.bufferTransaction.transaction?.toString() || '';
     transaction.value = props.bufferTransaction.type ?? false;
-    selectedIcon.value = props.bufferTransaction.icon || DEFAULT_EXPENSE_ICON;
 
-    selectedItemLabel.value = props.bufferTransaction.type 
-    ? 'Выберите категорию' 
-    : (props.bufferTransaction.category ?? 'Выберите категорию'); 
+    if (props.bufferTransaction.type) {
+      // 1. Если это ДОХОД — селект должен быть пустым
+      selectedCategoryObject.value = null; 
+    } else {
+    // 2. Если это РАСХОД — собираем объект из буфера
+    selectedCategoryObject.value = {
+      label: props.bufferTransaction.category ?? 'Выберите категорию',
+      icon: props.bufferTransaction.icon ?? DEFAULT_EXPENSE_ICON
+    };
+}
+
+
+    
   } else if (isOpen) {
     resetForm();
   }
 });
 
-watch(transaction, (isIncome) => {
-  if (isIncome) {
-    selectedIcon.value = DEFAULT_INCOME_ICON;
-    selectedItemLabel.value = 'Доход';
-  } else {
-    selectedItemLabel.value = 'Выберите категорию';
-    selectedIcon.value = DEFAULT_EXPENSE_ICON;
-  }
-});
 </script>
 
 <template>
-  <div
-    v-show="showPopupNew"
-    @click="$emit('update', false); resetForm();"
-    class="z-50 absolute w-full h-full fixed bg-black/50 flex items-center justify-center"
+  <Dialog
+    :visible="showPopupNew" 
+    @update:visible="$emit('update', $event)"
+    :modal="true" 
+    @hide="resetForm" 
+    :showHeader="false"
+    :dismissableMask="true"
+    :closable="false"
+    class="neumorphism-card! bg-[#e0e5ec]! border-none! p-6! rounded-3xl! "
+    :pt="{
+        header: { class: 'hidden' },
+        content: { 
+          class: 'p-3!' 
+        },
+    }"
   >
-    <div class="neumorphism-card! bg-[#e0e5ec]! border-none! p-9! rounded-3xl! w-[90vw]! max-w-[400px]!" @click.stop>
+  
+    <div class="neumorphism-card! bg-[#e0e5ec]! border-none! rounded-3xl! w-[90vw]! max-w-[330px]!">
       
       <!-- Тип транзакции -->
       <div class="flex flex-col mb-4">
@@ -166,24 +200,51 @@ watch(transaction, (isIncome) => {
       </div>
 
       <!-- Категория (только для расходов) -->
-      <div v-if="!transaction" class="mb-6 flex flex-col">
+      <div v-if="!transaction"  class="mb-6 flex flex-col">
         <label class="block text-900 font-medium mb-2 uppercase text-xs opacity-50">Категория</label>
-        <SplitButton
-          :label="selectedItemLabel"
-          :model="items"
-          class="w-full neumorphism-split-button"
+        <Select 
+          v-model="selectedCategoryObject" 
+          :options="items" 
+          optionLabel="label"
+          placeholder="Выберите категорию"
+          class="w-full neumorphism-select-button h-14"
           :pt="{
-            root: { class: 'rounded-xl overflow-hidden' },
-            pcButton: { 
-              root: { class: 'neumorphism-button-primary-split border-none! rounded-r-none! h-12 flex-1' } 
+            root: { 
+              class: 'neumorphism-card border-none! flex items-center px-4 cursor-pointer rounded-2xl shadow-sm transition-all active:scale-[0.98]' 
             },
-            pcMenuButton: { 
-              root: { class: 'neumorphism-button-primary-split border-none! border-l! border-white/20 rounded-l-none! w-12 h-12' } 
+            label: { 
+              class: 'flex items-center gap-3 p-0 font-medium text-gray-600' 
             },
-            menu: { class: 'neumorphism-select-panel border-none! mt-2' },
-            item: { class: 'hover:bg-white/20 rounded-lg m-1' }
+            dropdown: { 
+              class: 'p-select-dropdown' 
+            },
+            panel: { 
+              class: 'neumorphism-card border-none! mt-2 rounded-2xl p-2 shadow-2xl animate-fade-in' 
+            },
+            list: { class: 'p-0 flex flex-col gap-1' },
+            item: { 
+              class: 'rounded-xl m-0 px-4 py-3 transition-all hover:bg-white/40 hover:shadow-inner text-gray-600' 
+            }
           }"
-        />
+          @change="onCategoryChange"
+        >
+          <!-- Как выглядит ВЫБРАННОЕ значение в кнопке -->
+          <template #value="slotProps">
+            <div v-if="slotProps.value" class="flex items-center gap-3">
+              <i :class="[slotProps.value.icon, 'text-blue-500 text-lg']"></i>
+              <span class="font-medium text-gray-700">{{ slotProps.value.label }}</span>
+            </div>
+            <span v-else class="opacity-40">Выберите категорию</span>
+          </template>
+
+          <!-- Как выглядят ВАРИАНТЫ в выпадающем списке -->
+          <template #option="slotProps">
+            <div class="flex items-center gap-3 py-1">
+              <i :class="[slotProps.option.icon, 'text-gray-400']"></i>
+              <span class="text-sm font-medium text-gray-600">{{ slotProps.option.label }}</span>
+            </div>
+          </template>
+        </Select>
         <span v-if="isCategoryInvalid" class="error-text">Выберите категорию расхода</span>
       </div>
 
@@ -207,7 +268,7 @@ watch(transaction, (isIncome) => {
               class="w-full neumorphism-button neumorphism-button-primary"
             />
     </div>
-  </div>
+  </Dialog>
 </template>
 
 <style scoped>

@@ -2,9 +2,8 @@
 import type { Transaction } from '../../domain/entities/Transaction';
 import { computed, ref, watch } from 'vue';
 import { useTransaction } from '../composables/useTransaction';
-import Button from 'primevue/button';
 import Paginator from 'primevue/paginator';
-import AppLoader from './shared/AppLoader.vue';
+import Skeleton from 'primevue/skeleton';
 import { GroupTransactionsByDateUseCase } from '../../domain/use-cases/transaction/GroupTransactionsByDateUseCase';
 import AppMiniButton from './shared/AppMiniButton.vue';
 
@@ -66,13 +65,34 @@ watch(filteredTransactions, () => {
   <div class="w-full max-w-lg">
     
     <!-- 1. ЛОАДЕР (Скелетоны показываются, пока идет загрузка) -->
-    <AppLoader 
-      v-if="isLoading" 
-      :loading="true" 
-      :count="4" 
-      height="100px" 
-      class-name="m-2" 
-    />
+    <div v-if="isLoading">
+      <div
+        v-for="n in 4"
+        :key="n"
+        class="p-4 rounded-lg neumorphism-card m-2 mb-4"
+      >
+        <div class="flex justify-between items-center">
+          <div class="flex items-center">
+            <!-- Иконка категории -->
+            <div class="w-12 h-12 rounded flex justify-center items-center neumorphism-soft mr-3">
+              <Skeleton shape="circle" size="28px" />
+            </div>
+
+            <!-- Инфо (Сумма и Категория) -->
+            <div class="flex flex-col gap-2">
+              <Skeleton width="140px" height="16px" />
+              <Skeleton width="90px" height="12px" />
+            </div>
+          </div>
+
+          <!-- Кнопки управления -->
+          <div class="flex gap-2">
+            <Skeleton width="40px" height="40px" borderRadius="8px" />
+            <Skeleton width="40px" height="40px" borderRadius="8px" />
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- 2. КОНТЕНТ (Показывается, когда загрузка завершена и есть данные) -->
     <div v-else-if="displayData.length > 0">

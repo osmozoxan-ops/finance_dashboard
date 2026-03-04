@@ -202,7 +202,30 @@
   box-shadow: inset 4px 4px 8px #c5cad0, inset -4px -4px 8px #ffffff !important;
   transform: scale(0.97);
 }
+.neumorphism-select {
+    background: #e0e5ec;
+    /* Эффект "выпуклости" для кнопки */
+    box-shadow: 6px 6px 12px #b8bec5, 
+                -6px -6px 12px #ffffff;
+}
 
+/* Стили для панели списка, чтобы она "парила" над интерфейсом */
+.p-select-panel {
+    background: #e0e5ec !important;
+    box-shadow: 10px 10px 20px #b8bec5, 
+                -10px -10px 20px #ffffff !important;
+}
+
+/* Эффект при наведении на элемент списка */
+.p-select-item:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    box-shadow: inset 2px 2px 5px #b8bec5, 
+                inset -2px -2px 5px #ffffff !important;
+}
+
+.p-select-dropdown {
+    color: #3b82f6 !important;
+}
 /* Эффект при наведении для "Добавить" */
 .neumorphism-button-primary:hover {
   color: #2563eb !important; /* Углубляем синий */
@@ -220,10 +243,10 @@
 }
 /* Стили для карточек */
 .neumorphism-card {
-  border-radius: 10px;
-background: #e0e5ec;
+  border-radius: 10px !important;;
+background: #e0e5ec !important;
 box-shadow:  5px 5px 10px #c5cad0,
-             -5px -5px 10px #fbffff;
+             -5px -5px 10px #fbffff !important;
 }
 
 
