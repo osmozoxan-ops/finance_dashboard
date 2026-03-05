@@ -6,13 +6,10 @@ import ConfirmDialog from 'primevue/confirmdialog';
 <template>
   <main class="app">
     <!-- Глобальные компоненты -->
-    <Toast position="bottom-right" :pt="{
-      root: { class: 'opacity-90' },
-      message: { class: 'neumorphism-card border-none rounded-2xl shadow-xl' },
-      summary: { class: 'font-bold text-gray-700' },
-      detail: { class: 'text-sm text-gray-500' },
-      icon: { class: 'text-blue-500' }
-    }" />
+   <Toast position="bottom-center" :pt="{
+    root: { class: 'mobile-toast-root' },
+    message: { class: 'neumorphism-card border-none rounded-2xl shadow-xl mx-4 mb-4' }
+}" />
     
     <!-- Важно для работы удаления -->
     <ConfirmDialog />

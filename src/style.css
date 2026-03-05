@@ -384,3 +384,29 @@ body {
     inset 3px 3px 6px rgba(0, 0, 0, 0.05),
     inset -3px -3px 6px #ffffff !important;
 }
+@media screen and (max-width: 768px) {
+    /* Растягиваем контейнер тостов на всю ширину снизу */
+    .p-toast.p-component.p-toast-bottom-center {
+        width: 100%;
+        left: 0;
+        right: 0;
+        padding: 0 1rem; /* Отступы от краев экрана */
+    }
+
+    /* Делаем сам тост чуть крупнее для тапа */
+    .p-toast-message {
+        margin-bottom: 1rem !important;
+        backdrop-filter: blur(8px); /* Добавляем "дороговизны" */
+    }
+
+    .p-toast-message-content {
+        padding: 1.25rem !important;
+    }
+}
+
+/* На десктопе оставляем компактным */
+@media screen and (min-width: 769px) {
+    .p-toast {
+        width: 25rem; /* Стандартная ширина */
+    }
+}
