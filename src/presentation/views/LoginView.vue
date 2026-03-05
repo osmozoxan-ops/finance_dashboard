@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 // Импортируем наши слои
 import { useUser } from '../composables/useUser'
-import ProgressSpinner from 'primevue/progressspinner'
 
 const toast = useToast()
 const router = useRouter()
 
 // Настраиваем сервисы
-const { signIn, signUp } = useUser();
+const { signIn, signUp} = useUser();
 
 const emailTouched = ref(false);
 const passwordTouched = ref(false);
 const email = ref('')
 const password = ref('')
 const name = ref('')
-const isLoading = ref(false)
+const isLoading = ref(false) 
 const isLogin = ref(true)
+
+
 const passwordAutocomplete = computed(() => 
   isLogin.value ? 'current-password' : 'new-password'
 ) 
-
 
 // Метод Входа
 const handleAuth = async () => {
@@ -35,11 +35,12 @@ const handleAuth = async () => {
     }
     router.push('/dashboard')
   } catch (error: any) {
+    console.error('Auth error:', error)
     toast.add({ severity: 'error', summary: 'Ошибка входа', detail: 'Неверный email или пароль', life: 3000 })
   } finally {
     isLoading.value = false
   }
-} 
+}
 
 const toggleAuth = () => {
   isLogin.value = !isLogin.value
@@ -47,6 +48,7 @@ const toggleAuth = () => {
   password.value = ''
   name.value = ''
   }
+  
 const subtitleText = computed(() => isLogin.value ? 'Аккаунта ещё нет?' : 'Уже есть аккаунт?')
 const linkAccountText = computed(() => isLogin.value ? 'Создайте сейчас' : 'Войдите в него')
 const submitButtonText = computed(() => isLogin.value ? 'Вход' : 'Регистрация')
@@ -77,8 +79,7 @@ const isPasswordInvalid = computed(() => {
 
 <template>
   <div class="flex items-center justify-center min-h-screen">
-    <ProgressSpinner v-if="isLoading" class="flex items-center justify-center min-h-screen z-50" />
-    <div v-else class="p-8 rounded-lg max-w-md w-full neumorphism-card custom-override">
+    <div class="p-8 rounded-lg max-w-md w-full neumorphism-card custom-override">
       <div class="text-center mb-6">
         <div class="text-900 text-3xl font-medium mb-3">Приветствую!</div>
         <span class="text-600 font-medium line-height-3">{{ subtitleText }}</span>
@@ -163,8 +164,11 @@ const isPasswordInvalid = computed(() => {
   animation: fadeIn 0.3s ease;
 }
 
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 

@@ -89,21 +89,19 @@ let isAppMounted = false
 
 // Слушаем состояние авторизации ПЕРЕД тем, как запустить роутер и смонтировать приложение
 onAuthStateChanged(auth, async (user) => {
-  const userStore = useUserStore()
-  const { loadUser } = useUser()
+  const userStore = useUserStore();
+  const { loadUser } = useUser();
 
   if (user) {
-    userStore.userId = user.uid
-    // Подгружаем имя и лимит ПЕРЕД тем, как роутер проверит права доступа
-    await loadUser() 
+    userStore.userId = user.uid;
+    await loadUser(); // Ждем данные профиля
   } else {
-    userStore.userId = ''
+    userStore.userId = '';
   }
 
-  // Монтируем только один раз при первом ответе от Firebase
   if (!isAppMounted) {
-    app.use(router) // Теперь роутер увидит уже заполненный Store
-    app.mount('#app')
-    isAppMounted = true
+    app.use(router);
+    app.mount('#app'); // ТОЛЬКО ЗДЕСЬ лоадер из index.html исчезнет
+    isAppMounted = true;
   }
-})
+});

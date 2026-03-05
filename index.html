@@ -8,7 +8,20 @@
     <link rel="stylesheet" href="./src/style.css">
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+       <div id="initial-loader" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#e0e5ec]">
+      
+      <!-- Спиннер с неоморфной тенью -->
+      <div class="w-16 h-16 border-[6px] border-[#d1d9e6] border-t-blue-500 rounded-full animate-spin shadow-[4px_4px_8px_#b8bec5,-4px_-4px_8px_#ffffff]"></div>
+      
+      <!-- Текст с пульсацией -->
+      <p class="mt-6 text-[#7d8592] font-bold uppercase tracking-[0.2em] text-[10px] animate-pulse">
+        Инициализация системы
+      </p>
+      
+    </div>
+    </div>
+    
     <script type="module" src="./src/main.ts"></script>
   </body>
 </html>
