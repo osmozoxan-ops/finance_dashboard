@@ -2,9 +2,9 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
-
 // Импортируем наши слои
 import { useUser } from '../composables/useUser'
+import ProgressSpinner from 'primevue/progressspinner'
 
 const toast = useToast()
 const router = useRouter()
@@ -64,7 +64,7 @@ const isEmailInvalid = computed(() => {
   if (!emailTouched.value || email.value.length === 0) return false;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return email.value.length < 7 || !emailRegex.test(email.value);
-});
+}); 
 
 // Валидация Пароля (минимум 7 символов)
 const isPasswordInvalid = computed(() => {
@@ -77,7 +77,8 @@ const isPasswordInvalid = computed(() => {
 
 <template>
   <div class="flex items-center justify-center min-h-screen">
-    <div class="p-8 rounded-lg max-w-md w-full neumorphism-card custom-override">
+    <ProgressSpinner v-if="isLoading" class="flex items-center justify-center min-h-screen z-50" />
+    <div v-else class="p-8 rounded-lg max-w-md w-full neumorphism-card custom-override">
       <div class="text-center mb-6">
         <div class="text-900 text-3xl font-medium mb-3">Приветствую!</div>
         <span class="text-600 font-medium line-height-3">{{ subtitleText }}</span>
